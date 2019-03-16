@@ -1,6 +1,5 @@
 // Import libraries
-const BibLatexParser = require("biblatex-csl-converter").BibLatexParser;
-const Cite = require('citation-js');
+import {BibLatexParser} from "biblatex-csl-converter";
 const fs = require('fs');
 
 // Debugging help
@@ -36,6 +35,14 @@ const bibFile = fs.readFile('./bibFiles/works.bib', 'utf8', (error, data) => {
     }
 });
 
-const formatCitation = () => {
+interface Work {
+    title: string,
+    date: string,
+    authorList: string[],
+    doi: string,
+    url: string
+}
+
+const formatCitation = (work: Work) => {
     // {title} ({date}) {authorList}. DOI: {doi}. Available at: {url}.
 }
