@@ -1,5 +1,6 @@
 // Import libraries
 const BibLatexParser = require("biblatex-csl-converter").BibLatexParser;
+const Cite = require('citation-js');
 const fs = require('fs');
 
 // Debugging help
@@ -23,14 +24,18 @@ const bibFile = fs.readFile('./bibFiles/works.bib', 'utf8', (error, data) => {
                 const leadAuthorFamilyName = citation.fields.author[0].family[0].text;
                 const doi = citation.fields.doi;
                 const url = citation.fields.url;
+                inspect(doi);
+                inspect(url);
                 inspect(date);
                 inspect(title);
                 inspect(leadAuthorGivenName);
                 inspect(leadAuthorFamilyName);
-                inspect(doi);
-                inspect(url);
             });
         });
         return true;
     }
 });
+
+const formatCitation = () => {
+    // {title} ({date}) {authorList}. DOI: {doi}. Available at: {url}.
+}
