@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "esnext",
+        "module": "commonjs",
         "noImplicitAny": false, // should be true
         "strictNullChecks": true,
         "noImplicitReturns": true, // should be true

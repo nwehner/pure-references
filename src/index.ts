@@ -4,45 +4,117 @@ const fs = require('fs');
 
 // Debugging help
 const util = require('util');
-const inspect = (err) => { console.log(util.inspect(err, { showHidden: false, depth: null })); };
+const inspect = (err: any) => { console.log(util.inspect(err, { showHidden: false, depth: null })); };
 
-const bibFile = fs.readFile('./bibFiles/works.bib', 'utf8', (error, data) => {
+// Read our file and parse it.
+const bibFile = (alg : FormatCitation) => fs.readFile('./bibFiles/works.bib', 'utf8', (error: any, data: any) => {
     if (error) {
+        console.log('Could not read file.');
         inspect(error);
         return false;
     } else {
-        // inspect(data);
+        // We successfully read the file. Now parse it.
         const parser = new BibLatexParser(data, {processUnexpected: true, processUnknown: true, async: true})
-        parser.parse().then((bib) => {
+        parser.parse().then((bib: any) => {
             Object.keys(bib.entries).forEach((key) => {
-                const citation = bib.entries[key];
-                // inspect(citation);
-                const date = citation.fields.date;
-                const title = citation.fields.title[0].text;
-                const leadAuthorGivenName = citation.fields.author[0].given[0].text;
-                const leadAuthorFamilyName = citation.fields.author[0].family[0].text;
-                const doi = citation.fields.doi;
-                const url = citation.fields.url;
-                inspect(doi);
-                inspect(url);
-                inspect(date);
-                inspect(title);
-                inspect(leadAuthorGivenName);
-                inspect(leadAuthorFamilyName);
+                // Parse the BibTex JSON object.
+                const citation: any = bib.entries[key];
+                const title: string = citation.fields.title[0].text;
+                const date: string = citation.fields.date;
+                const authorList: Author[] = citation.fields.author[0];
+                const doi: string = citation.fields.doi;
+                const url: string = citation.fields.url;
+                // Format into a citation.
+                const work: Work = {
+                    title: title,
+                    date: date,
+                    authorList: authorList,
+                    doi: doi,
+                    url: url
+                }
+                const formattedCitation = formatCitation(alg)(work);
+                inspect(formattedCitation);
+                return formattedCitation;
             });
         });
         return true;
     }
 });
 
-interface Work {
-    title: string,
-    date: string,
-    authorList: string[],
-    doi: string,
-    url: string
+// Specify our types.
+interface Author {
+    readonly given: [
+        {
+            type: 'text',
+            text: string
+        }
+    ],
+    readonly family: [
+        {
+            type: 'text',
+            text: string
+        }
+    ]
 }
 
-const formatCitation = (work: Work) => {
-    // {title} ({date}) {authorList}. DOI: {doi}. Available at: {url}.
+interface Work {
+    readonly title: string,
+    readonly date: string,
+    readonly authorList: Author[],
+    readonly doi: string,
+    readonly url: string
 }
+
+interface Citation {
+    citation: string
+}
+
+interface FormattedAuthors {
+    authors: string
+}
+
+// Specify the algebra for formatting authors.
+interface FormatAuthors {
+    readonly formatAuthors: (authorList: Author[]) => FormattedAuthors;
+}
+
+const formatAuthors = (alg: FormatAuthors) =>
+                      (authorList: Author[]) => {
+    const formatAuthors = alg.formatAuthors(authorList);
+    return formatAuthors;
+}
+
+// Format a list of authors.
+const formatAutherImplmentation: FormatAuthors = {
+    formatAuthors: (authorList: Author[]) => 
+    // Needs to return the formatted authors string.
+        ({authors: 'formatted authors'})
+}
+
+// Specify the algebra for formatting the rest of the citation.
+interface FormatCitation {
+    readonly formatCitation: (work: Work) => Citation;
+}
+
+const formatCitation = (alg: FormatCitation) =>
+                       (work: Work) => {
+    const formatCitation = alg.formatCitation(work);
+    return formatCitation;
+}
+
+// Format the citation.
+const formatCitationImplementation: FormatCitation = {
+    formatCitation: (work: Work) => {
+        // Needs to return a formatted citation string.
+        // First parse over the authors.
+        const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
+        // {title} ({date}) {authorList}. DOI: {doi}. Available at: {url}.
+        const citation = work.title + ' (' + work.date + ') ' + ' ' + authors + '. DOI: ' + work.doi + '. Available at: ' + work.url + '.';
+        return {
+            citation: citation
+        }
+    }
+}
+
+// Run the program.
+bibFile(formatCitationImplementation);
