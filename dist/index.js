@@ -49,7 +49,7 @@ const formatCitation = (alg) => (work) => {
 const formatCitationImplementation = {
     formatCitation: (work) => {
         const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
-        const citation = work.title + ' (' + work.date + ') ' + ' ' + authors + '. DOI: ' + work.doi + '. Available at: ' + work.url + '.';
+        const citation = work.title + ' (' + work.date + ') ' + authors.authors + '. DOI: ' + work.doi + '. Available at: ' + work.url + '.';
         return {
             citation: citation
         };

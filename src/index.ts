@@ -109,7 +109,7 @@ const formatCitationImplementation: FormatCitation = {
         // First parse over the authors.
         const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
         // {title} ({date}) {authorList}. DOI: {doi}. Available at: {url}.
-        const citation = work.title + ' (' + work.date + ') ' + ' ' + authors + '. DOI: ' + work.doi + '. Available at: ' + work.url + '.';
+        const citation = work.title + ' (' + work.date + ') ' + authors.authors + '. DOI: ' + work.doi + '. Available at: ' + work.url + '.';
         return {
             citation: citation
         }
