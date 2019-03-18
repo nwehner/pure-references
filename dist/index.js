@@ -71,12 +71,12 @@ const formatAutherImplmentation = {
             };
             return formattedAuthor;
         });
-        if (formattedAuthors.length = 1) {
+        if (formattedAuthors.length === 1) {
             return {
                 authors: addPunctuation(formattedAuthors[0].lastFirst)
             };
         }
-        else if (formattedAuthors.length = 2) {
+        else if (formattedAuthors.length === 2) {
             return {
                 authors: formattedAuthors[0].lastFirst + ' and ' + addPunctuation(formattedAuthors[1].firstLast)
             };
@@ -110,5 +110,5 @@ const formatCitationAuthorsFirst = {
         };
     }
 };
-bibFile(formatCitationTitleFirst);
+bibFile(formatCitationAuthorsFirst);
 //# sourceMappingURL=index.js.map

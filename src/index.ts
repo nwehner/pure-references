@@ -126,13 +126,13 @@ const formatAutherImplmentation: FormatAuthors = {
             return formattedAuthor
         });
         // Depending on the length of formattedAuthor[] we'll return the final, formatted string.
-        if (formattedAuthors.length = 1) {
+        if (formattedAuthors.length === 1) {
             // Solo author.
             return {
                 authors: addPunctuation(formattedAuthors[0].lastFirst)
             }
         }
-        else if (formattedAuthors.length = 2) {
+        else if (formattedAuthors.length === 2) {
             // Use and.
             return {
                 authors: formattedAuthors[0].lastFirst + ' and ' + addPunctuation(formattedAuthors[1].firstLast)
