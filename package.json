@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@types/node": "^11.11.3",
     "biblatex-csl-converter": "^1.6.7",
     "fs": "0.0.1-security",
     "util": "^0.11.1"
