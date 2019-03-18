@@ -158,13 +158,16 @@ const formatCitation = (alg: FormatCitation) =>
     return formatCitation;
 }
 
-// Format the citation.
-const formatCitationImplementation: FormatCitation = {
+/**
+ * We can have a number of options to format the citation.
+ */
+
+// Format the citation like: {title} ({date}) {authorList}. DOI: {doi}. Available at: {url}.
+const formatCitationTitleFirst: FormatCitation = {
     formatCitation: (work: Work) => {
         // Needs to return a formatted citation string.
         // First parse over the authors.
         const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
-        // {title} ({date}) {authorList}. DOI: {doi}. Available at: {url}.
         const citation = work.title + ' (' + work.date + ') ' + authors.authors + ' DOI: ' + work.doi + '. Available at: ' + work.url + '.';
         return {
             citation: citation
@@ -172,5 +175,16 @@ const formatCitationImplementation: FormatCitation = {
     }
 }
 
+// Format the citation like: {authorList} {date}. {title}. DOI: {doi}. Available at: {url}.
+const formatCitationAuthorsFirst: FormatCitation = {
+    formatCitation: (work: Work) => {
+        const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
+        const citation = authors.authors + ' ' + work.date + '. ' + addPunctuation(work.title) + ' DOI: ' + work.doi + '. Available at: ' + work.url;
+        return {
+            citation: citation
+        }
+    }
+}
+
 // Run the program.
-bibFile(formatCitationImplementation);
+bibFile(formatCitationAuthorsFirst);

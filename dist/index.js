@@ -92,7 +92,7 @@ const formatCitation = (alg) => (work) => {
     const formatCitation = alg.formatCitation(work);
     return formatCitation;
 };
-const formatCitationImplementation = {
+const formatCitationTitleFirst = {
     formatCitation: (work) => {
         const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
         const citation = work.title + ' (' + work.date + ') ' + authors.authors + ' DOI: ' + work.doi + '. Available at: ' + work.url + '.';
@@ -101,5 +101,14 @@ const formatCitationImplementation = {
         };
     }
 };
-bibFile(formatCitationImplementation);
+const formatCitationAuthorsFirst = {
+    formatCitation: (work) => {
+        const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
+        const citation = authors.authors + ' ' + work.date + '. ' + addPunctuation(work.title) + ' DOI: ' + work.doi + '. Available at: ' + work.url;
+        return {
+            citation: citation
+        };
+    }
+};
+bibFile(formatCitationTitleFirst);
 //# sourceMappingURL=index.js.map
