@@ -33,7 +33,7 @@ const bibFile = (alg : FormatCitation) => fs.readFile('./bibFiles/works.bib', 'u
                     url: url
                 }
                 const formattedCitation = formatCitation(alg)(work);
-                // inspect(formattedCitation);
+                inspect(formattedCitation);
                 return formattedCitation;
             });
         });
@@ -93,8 +93,6 @@ const formatAuthors = (alg: FormatAuthors) =>
 const formatAutherImplmentation: FormatAuthors = {
     formatAuthors: (authorList: Author[]) => {
         const formattedAuthors: FormattedAuthor[] = authorList.map((value: Author, label: number) => {
-            inspect(value);
-            inspect('Label : ' + label);
             const lastFirst: string = value.family[0].text + ', ' + value.given[0].text;
             const firstLast: string = value.given[0].text + ' ' + value.family[0].text;
             const formattedAuthor: FormattedAuthor = {
@@ -103,9 +101,25 @@ const formatAutherImplmentation: FormatAuthors = {
             };
             return formattedAuthor
         });
-        
-        // Needs to return the formatted authors string.
-        return ({authors: 'formatted authors'})
+        // Depending on the length of formattedAuthor[] we'll return the final, formatted string.
+        if (formattedAuthors.length = 1) {
+            // Solo author.
+            return {
+                authors: formattedAuthors[0].lastFirst + '.'
+            }
+        }
+        else if (formattedAuthors.length = 2) {
+            // Use and.
+            return {
+                authors: formattedAuthors[0].lastFirst + ' and ' + formattedAuthors[1].firstLast + '.'
+            }
+        }
+        else {
+            // Use et al.
+            return {
+                authors: formattedAuthors[0].lastFirst + ', et al.'
+            }
+        }
     }
 }
 
@@ -127,7 +141,7 @@ const formatCitationImplementation: FormatCitation = {
         // First parse over the authors.
         const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
         // {title} ({date}) {authorList}. DOI: {doi}. Available at: {url}.
-        const citation = work.title + ' (' + work.date + ') ' + authors.authors + '. DOI: ' + work.doi + '. Available at: ' + work.url + '.';
+        const citation = work.title + ' (' + work.date + ') ' + authors.authors + ' DOI: ' + work.doi + '. Available at: ' + work.url + '.';
         return {
             citation: citation
         }

@@ -28,6 +28,7 @@ const bibFile = (alg) => fs.readFile('./bibFiles/works.bib', 'utf8', (error, dat
                     url: url
                 };
                 const formattedCitation = formatCitation(alg)(work);
+                inspect(formattedCitation);
                 return formattedCitation;
             });
         });
@@ -41,8 +42,6 @@ const formatAuthors = (alg) => (authorList) => {
 const formatAutherImplmentation = {
     formatAuthors: (authorList) => {
         const formattedAuthors = authorList.map((value, label) => {
-            inspect(value);
-            inspect('Label : ' + label);
             const lastFirst = value.family[0].text + ', ' + value.given[0].text;
             const firstLast = value.given[0].text + ' ' + value.family[0].text;
             const formattedAuthor = {
@@ -51,7 +50,21 @@ const formatAutherImplmentation = {
             };
             return formattedAuthor;
         });
-        return ({ authors: 'formatted authors' });
+        if (formattedAuthors.length = 1) {
+            return {
+                authors: formattedAuthors[0].lastFirst + '.'
+            };
+        }
+        else if (formattedAuthors.length = 2) {
+            return {
+                authors: formattedAuthors[0].lastFirst + ' and ' + formattedAuthors[1].firstLast + '.'
+            };
+        }
+        else {
+            return {
+                authors: formattedAuthors[0].lastFirst + ', et al.'
+            };
+        }
     }
 };
 const formatCitation = (alg) => (work) => {
@@ -61,7 +74,7 @@ const formatCitation = (alg) => (work) => {
 const formatCitationImplementation = {
     formatCitation: (work) => {
         const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
-        const citation = work.title + ' (' + work.date + ') ' + authors.authors + '. DOI: ' + work.doi + '. Available at: ' + work.url + '.';
+        const citation = work.title + ' (' + work.date + ') ' + authors.authors + ' DOI: ' + work.doi + '. Available at: ' + work.url + '.';
         return {
             citation: citation
         };
