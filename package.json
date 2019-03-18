@@ -1,6 +1,6 @@
 {
   "name": "pure-references",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Turns a BibTex bibliography into a citation list.",
   "main": "dist/index.js",
   "dependencies": {
