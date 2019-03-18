@@ -104,7 +104,7 @@ const formatAuthors = (alg: FormatAuthors) =>
 
 // Helper function to add periods.
 const addPunctuation = (text: string) => {
-    if (text[text.length - 1] === '.') {
+    if (text[text.length - 1] === '.' || text[text.length - 1] === '?') {
         return text
     }
     else {
@@ -189,4 +189,4 @@ const formatCitationAuthorsFirst: FormatCitation = {
 export { bibToCitation, formatCitationAuthorsFirst, formatCitationTitleFirst };
 
 // Run the program.
-// bibToCitation('./bibFiles/works.bib')(formatCitationAuthorsFirst);
+bibToCitation('./bibFiles/works.bib')(formatCitationAuthorsFirst);

@@ -53,7 +53,7 @@ const formatAuthors = (alg) => (authorList) => {
     return formatAuthors;
 };
 const addPunctuation = (text) => {
-    if (text[text.length - 1] === '.') {
+    if (text[text.length - 1] === '.' || text[text.length - 1] === '?') {
         return text;
     }
     else {
@@ -112,4 +112,5 @@ const formatCitationAuthorsFirst = {
     }
 };
 exports.formatCitationAuthorsFirst = formatCitationAuthorsFirst;
+bibToCitation('./bibFiles/works.bib')(formatCitationAuthorsFirst);
 //# sourceMappingURL=index.js.map
