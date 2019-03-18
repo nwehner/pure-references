@@ -8,6 +8,6 @@ Then, import the module to your program (likely your index.ts file):
 Once installed and imported, run the module.
 
 ### Provide a list of citations with authors first
-    bibToCitation('./path/to/bibFile.bib', formatCitationAuthorsFirst);
+    bibToCitation('./path/to/bibFile.bib')(formatCitationAuthorsFirst);
 ### Provide a list of citations with titles first
-    bibToCitation('./path/to/bibFile.bib', formatCitationTitleFirst);
+    bibToCitation('./path/to/bibFile.bib')(formatCitationTitleFirst);

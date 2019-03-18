@@ -7,15 +7,15 @@ const util = require('util');
 const inspect = (err: any) => { console.log(util.inspect(err, { showHidden: false, depth: null })); };
 
 // Read our file and parse it.
-const bibFile = (alg : FormatCitation) => fs.readFile('./bibFiles/works.bib', 'utf8', (error: any, data: any) => {
+const bibToCitation = (bibFile: string ) => (alg : FormatCitation) => fs.readFile(bibFile, 'utf8', (error: any, data: any) => {
     if (error) {
         console.log('Could not read file.');
         inspect(error);
-        return false;
+        return error;
     } else {
         // We successfully read the file. Now parse it.
         const parser = new BibLatexParser(data, {processUnexpected: true, processUnknown: true, async: true})
-        parser.parse().then((bib: any) => {
+        return parser.parse().then((bib: any) => {
             Object.keys(bib.entries).forEach((key) => {
                 // Parse the BibTex JSON object.
                 const citation: any = bib.entries[key];
@@ -33,11 +33,10 @@ const bibFile = (alg : FormatCitation) => fs.readFile('./bibFiles/works.bib', 'u
                     url: url
                 }
                 const formattedCitation = formatCitation(alg)(work);
-                inspect(formattedCitation);
+                inspect(formattedCitation.citation);
                 return formattedCitation;
             });
         });
-        return true;
     }
 });
 
@@ -186,5 +185,8 @@ const formatCitationAuthorsFirst: FormatCitation = {
     }
 }
 
+// Export module.
+export { bibToCitation, formatCitationAuthorsFirst, formatCitationTitleFirst };
+
 // Run the program.
-bibFile(formatCitationAuthorsFirst);
+// bibToCitation('./bibFiles/works.bib')(formatCitationAuthorsFirst);

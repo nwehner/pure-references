@@ -4,15 +4,15 @@ const biblatex_csl_converter_1 = require("biblatex-csl-converter");
 const fs = require('fs');
 const util = require('util');
 const inspect = (err) => { console.log(util.inspect(err, { showHidden: false, depth: null })); };
-const bibFile = (alg) => fs.readFile('./bibFiles/works.bib', 'utf8', (error, data) => {
+const bibToCitation = (bibFile) => (alg) => fs.readFile(bibFile, 'utf8', (error, data) => {
     if (error) {
         console.log('Could not read file.');
         inspect(error);
-        return false;
+        return error;
     }
     else {
         const parser = new biblatex_csl_converter_1.BibLatexParser(data, { processUnexpected: true, processUnknown: true, async: true });
-        parser.parse().then((bib) => {
+        return parser.parse().then((bib) => {
             Object.keys(bib.entries).forEach((key) => {
                 const citation = bib.entries[key];
                 const title = citation.fields.title[0].text;
@@ -28,13 +28,13 @@ const bibFile = (alg) => fs.readFile('./bibFiles/works.bib', 'utf8', (error, dat
                     url: url
                 };
                 const formattedCitation = formatCitation(alg)(work);
-                inspect(formattedCitation);
+                inspect(formattedCitation.citation);
                 return formattedCitation;
             });
         });
-        return true;
     }
 });
+exports.bibToCitation = bibToCitation;
 const formatDate = (date) => {
     if (date) {
         if (date.length > 4) {
@@ -101,6 +101,7 @@ const formatCitationTitleFirst = {
         };
     }
 };
+exports.formatCitationTitleFirst = formatCitationTitleFirst;
 const formatCitationAuthorsFirst = {
     formatCitation: (work) => {
         const authors = formatAuthors(formatAutherImplmentation)(work.authorList);
@@ -110,5 +111,5 @@ const formatCitationAuthorsFirst = {
         };
     }
 };
-bibFile(formatCitationAuthorsFirst);
+exports.formatCitationAuthorsFirst = formatCitationAuthorsFirst;
 //# sourceMappingURL=index.js.map
