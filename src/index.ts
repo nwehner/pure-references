@@ -21,7 +21,7 @@ const bibFile = (alg : FormatCitation) => fs.readFile('./bibFiles/works.bib', 'u
                 const citation: any = bib.entries[key];
                 const title: string = citation.fields.title[0].text;
                 const date: string = citation.fields.date;
-                const authorList: Author[] = citation.fields.author[0];
+                const authorList: Author[] = citation.fields.author;
                 const doi: string = citation.fields.doi;
                 const url: string = citation.fields.url;
                 // Format into a citation.
@@ -33,7 +33,7 @@ const bibFile = (alg : FormatCitation) => fs.readFile('./bibFiles/works.bib', 'u
                     url: url
                 }
                 const formattedCitation = formatCitation(alg)(work);
-                inspect(formattedCitation);
+                // inspect(formattedCitation);
                 return formattedCitation;
             });
         });
@@ -69,13 +69,18 @@ interface Citation {
     citation: string
 }
 
-interface FormattedAuthors {
+interface FormattedAuthor {
+    lastFirst: string,
+    firstLast: string
+}
+
+interface FormattedAuthorsString {
     authors: string
 }
 
 // Specify the algebra for formatting authors.
 interface FormatAuthors {
-    readonly formatAuthors: (authorList: Author[]) => FormattedAuthors;
+    readonly formatAuthors: (authorList: Author[]) => FormattedAuthorsString;
 }
 
 const formatAuthors = (alg: FormatAuthors) =>
@@ -86,9 +91,22 @@ const formatAuthors = (alg: FormatAuthors) =>
 
 // Format a list of authors.
 const formatAutherImplmentation: FormatAuthors = {
-    formatAuthors: (authorList: Author[]) => 
-    // Needs to return the formatted authors string.
-        ({authors: 'formatted authors'})
+    formatAuthors: (authorList: Author[]) => {
+        const formattedAuthors: FormattedAuthor[] = authorList.map((value: Author, label: number) => {
+            inspect(value);
+            inspect('Label : ' + label);
+            const lastFirst: string = value.family[0].text + ', ' + value.given[0].text;
+            const firstLast: string = value.given[0].text + ' ' + value.family[0].text;
+            const formattedAuthor: FormattedAuthor = {
+                lastFirst: lastFirst,
+                firstLast: firstLast
+            };
+            return formattedAuthor
+        });
+        
+        // Needs to return the formatted authors string.
+        return ({authors: 'formatted authors'})
+    }
 }
 
 // Specify the algebra for formatting the rest of the citation.

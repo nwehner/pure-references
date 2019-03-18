@@ -17,7 +17,7 @@ const bibFile = (alg) => fs.readFile('./bibFiles/works.bib', 'utf8', (error, dat
                 const citation = bib.entries[key];
                 const title = citation.fields.title[0].text;
                 const date = citation.fields.date;
-                const authorList = citation.fields.author[0];
+                const authorList = citation.fields.author;
                 const doi = citation.fields.doi;
                 const url = citation.fields.url;
                 const work = {
@@ -28,7 +28,6 @@ const bibFile = (alg) => fs.readFile('./bibFiles/works.bib', 'utf8', (error, dat
                     url: url
                 };
                 const formattedCitation = formatCitation(alg)(work);
-                inspect(formattedCitation);
                 return formattedCitation;
             });
         });
@@ -40,7 +39,20 @@ const formatAuthors = (alg) => (authorList) => {
     return formatAuthors;
 };
 const formatAutherImplmentation = {
-    formatAuthors: (authorList) => ({ authors: 'formatted authors' })
+    formatAuthors: (authorList) => {
+        const formattedAuthors = authorList.map((value, label) => {
+            inspect(value);
+            inspect('Label : ' + label);
+            const lastFirst = value.family[0].text + ', ' + value.given[0].text;
+            const firstLast = value.given[0].text + ' ' + value.family[0].text;
+            const formattedAuthor = {
+                lastFirst: lastFirst,
+                firstLast: firstLast
+            };
+            return formattedAuthor;
+        });
+        return ({ authors: 'formatted authors' });
+    }
 };
 const formatCitation = (alg) => (work) => {
     const formatCitation = alg.formatCitation(work);
