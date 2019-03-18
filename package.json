@@ -1,8 +1,8 @@
 {
   "name": "pure-references",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Turns a BibTex bibliography into a citation list.",
+  "main": "dist/index.js",
   "dependencies": {
     "@types/node": "^11.11.3",
     "biblatex-csl-converter": "^1.6.7",
@@ -17,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/nwehner/pure-references.git"
   },
-  "author": "Nick Wehner",
+  "author": "Nick Wehner <nick@octogroup.org> (https://www.octogroup.org)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/nwehner/pure-references/issues"
