@@ -16,7 +16,7 @@ const bibFile = (alg) => fs.readFile('./bibFiles/works.bib', 'utf8', (error, dat
             Object.keys(bib.entries).forEach((key) => {
                 const citation = bib.entries[key];
                 const title = citation.fields.title[0].text;
-                const date = citation.fields.date;
+                const date = formatDate(citation.fields.date);
                 const authorList = citation.fields.author;
                 const doi = citation.fields.doi;
                 const url = citation.fields.url;
@@ -35,9 +35,30 @@ const bibFile = (alg) => fs.readFile('./bibFiles/works.bib', 'utf8', (error, dat
         return true;
     }
 });
+const formatDate = (date) => {
+    if (date) {
+        if (date.length > 4) {
+            return date.substring(0, 4);
+        }
+        else {
+            return date;
+        }
+    }
+    else {
+        return 'In Press';
+    }
+};
 const formatAuthors = (alg) => (authorList) => {
     const formatAuthors = alg.formatAuthors(authorList);
     return formatAuthors;
+};
+const addPunctuation = (text) => {
+    if (text[text.length - 1] === '.') {
+        return text;
+    }
+    else {
+        return text + '.';
+    }
 };
 const formatAutherImplmentation = {
     formatAuthors: (authorList) => {
@@ -52,12 +73,12 @@ const formatAutherImplmentation = {
         });
         if (formattedAuthors.length = 1) {
             return {
-                authors: formattedAuthors[0].lastFirst + '.'
+                authors: addPunctuation(formattedAuthors[0].lastFirst)
             };
         }
         else if (formattedAuthors.length = 2) {
             return {
-                authors: formattedAuthors[0].lastFirst + ' and ' + formattedAuthors[1].firstLast + '.'
+                authors: formattedAuthors[0].lastFirst + ' and ' + addPunctuation(formattedAuthors[1].firstLast)
             };
         }
         else {

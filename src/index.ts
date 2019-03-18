@@ -20,7 +20,7 @@ const bibFile = (alg : FormatCitation) => fs.readFile('./bibFiles/works.bib', 'u
                 // Parse the BibTex JSON object.
                 const citation: any = bib.entries[key];
                 const title: string = citation.fields.title[0].text;
-                const date: string = citation.fields.date;
+                const date: string = formatDate(citation.fields.date);
                 const authorList: Author[] = citation.fields.author;
                 const doi: string = citation.fields.doi;
                 const url: string = citation.fields.url;
@@ -40,6 +40,20 @@ const bibFile = (alg : FormatCitation) => fs.readFile('./bibFiles/works.bib', 'u
         return true;
     }
 });
+
+const formatDate = (date: string) => {
+    if (date) {
+        if (date.length > 4) {
+            return date.substring(0,4)
+        }
+        else {
+            return date
+        }
+    }
+    else {
+        return 'In Press'
+    }
+}
 
 // Specify our types.
 interface Author {
@@ -89,6 +103,16 @@ const formatAuthors = (alg: FormatAuthors) =>
     return formatAuthors;
 }
 
+// Helper function to add periods.
+const addPunctuation = (text: string) => {
+    if (text[text.length - 1] === '.') {
+        return text
+    }
+    else {
+        return text + '.'
+    }
+}
+
 // Format a list of authors.
 const formatAutherImplmentation: FormatAuthors = {
     formatAuthors: (authorList: Author[]) => {
@@ -105,13 +129,13 @@ const formatAutherImplmentation: FormatAuthors = {
         if (formattedAuthors.length = 1) {
             // Solo author.
             return {
-                authors: formattedAuthors[0].lastFirst + '.'
+                authors: addPunctuation(formattedAuthors[0].lastFirst)
             }
         }
         else if (formattedAuthors.length = 2) {
             // Use and.
             return {
-                authors: formattedAuthors[0].lastFirst + ' and ' + formattedAuthors[1].firstLast + '.'
+                authors: formattedAuthors[0].lastFirst + ' and ' + addPunctuation(formattedAuthors[1].firstLast)
             }
         }
         else {
